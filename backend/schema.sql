@@ -1,5 +1,7 @@
 -- Bakery Production Manager Database Schema
 
+DROP TABLE IF EXISTS ai_results CASCADE;
+DROP TABLE IF EXISTS batch_alert_thresholds CASCADE;
 DROP TABLE IF EXISTS delivery_routes CASCADE;
 DROP TABLE IF EXISTS equipment_maintenance CASCADE;
 DROP TABLE IF EXISTS staff_schedules CASCADE;
@@ -258,6 +260,36 @@ CREATE TABLE daily_reports (
   issues TEXT,
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- AI Results (persisted AI analyses)
+CREATE TABLE ai_results (
+  id SERIAL PRIMARY KEY,
+  feature_name VARCHAR(100) NOT NULL,
+  input_summary TEXT,
+  content TEXT,
+  parsed_result JSONB,
+  model VARCHAR(100),
+  tokens_used INT,
+  user_id INT REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Batch Alert Thresholds (persisted, replaces in-memory store)
+CREATE TABLE batch_alert_thresholds (
+  id SERIAL PRIMARY KEY,
+  batch_type VARCHAR(100) UNIQUE NOT NULL,
+  temp_min_f DECIMAL(6,1) DEFAULT 325,
+  temp_max_f DECIMAL(6,1) DEFAULT 425,
+  duration_max_minutes INT DEFAULT 120,
+  enabled BOOLEAN DEFAULT true,
+  updated_by INT REFERENCES users(id),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Insert default threshold
+INSERT INTO batch_alert_thresholds (batch_type, temp_min_f, temp_max_f, duration_max_minutes, enabled)
+VALUES ('default', 325, 425, 120, true)
+ON CONFLICT (batch_type) DO NOTHING;
 
 -- Delivery Routes
 CREATE TABLE delivery_routes (

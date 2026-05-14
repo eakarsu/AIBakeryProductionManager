@@ -1,0 +1,97 @@
+{
+  "project": "AIBakeryProductionManager",
+  "marker": "// === Batch 01 Gaps & Frontend Mounts ===",
+  "features": [
+    {
+      "slug": "supply-chain-agent-predicting-ingredient-shortages",
+      "component": "SupplyChainAgentPredictingIngredientShortagesPage",
+      "label": "Supply chain agent predicting ingredient shortages and auto-suggesting substitutions weeks in advance",
+      "endpoint": "/api/cf-supply-chain-agent-predicting-ingredient-shortages",
+      "kind": "cfs"
+    },
+    {
+      "slug": "multi-location-demand-sync-with-regional-trend-det",
+      "component": "MultiLocationDemandSyncWithRegionalTrendDetPage",
+      "label": "Multi-location demand sync with regional trend detection",
+      "endpoint": "/api/cf-multi-location-demand-sync-with-regional-trend-det",
+      "kind": "cfs"
+    },
+    {
+      "slug": "video-based-recipe-adaptation-upload-finished-prod",
+      "component": "VideoBasedRecipeAdaptationUploadFinishedProdPage",
+      "label": "Video-based recipe adaptation: upload finished product, AI generates scaled recipe + visual guide",
+      "endpoint": "/api/cf-video-based-recipe-adaptation-upload-finished-prod",
+      "kind": "cfs"
+    },
+    {
+      "slug": "integrations-with-pos-square-toast-supplier-apis-s",
+      "component": "IntegrationsWithPosSquareToastSupplierApisSPage",
+      "label": "Integrations with POS (Square, Toast), supplier APIs (Sysco, US Foods), inventory (MarginEdge)",
+      "endpoint": "/api/cf-integrations-with-pos-square-toast-supplier-apis-s",
+      "kind": "cfs"
+    },
+    {
+      "slug": "no-vision-based-quality-grading-from-oven-cameras",
+      "component": "NoVisionBasedQualityGradingFromOvenCamerasPage",
+      "label": "No vision-based quality grading from oven cameras",
+      "endpoint": "/api/gap-no-vision-based-quality-grading-from-oven-cameras",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-ai-dynamic-pricing-for-daily-fresh-goods",
+      "component": "NoAiDynamicPricingForDailyFreshGoodsPage",
+      "label": "No AI dynamic pricing for daily fresh goods",
+      "endpoint": "/api/gap-no-ai-dynamic-pricing-for-daily-fresh-goods",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-agentic-supplier-substitution-decisioning-surfa",
+      "component": "NoAgenticSupplierSubstitutionDecisioningSurfaPage",
+      "label": "No agentic supplier-substitution decisioning surfaced via UI",
+      "endpoint": "/api/gap-no-agentic-supplier-substitution-decisioning-surfa",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-predictive-shelf-life-modeling-per-sku",
+      "component": "NoPredictiveShelfLifeModelingPerSkuPage",
+      "label": "No predictive shelf-life modeling per SKU",
+      "endpoint": "/api/gap-no-predictive-shelf-life-modeling-per-sku",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-customer-subscription-standing-order-management",
+      "component": "NoCustomerSubscriptionStandingOrderManagementPage",
+      "label": "No customer subscription/standing-order management",
+      "endpoint": "/api/gap-no-customer-subscription-standing-order-management",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-notification-system-no-email-sms-delivery-chann",
+      "component": "NoNotificationSystemNoEmailSmsDeliveryChannPage",
+      "label": "No notification system (no email/SMS delivery channel)",
+      "endpoint": "/api/gap-no-notification-system-no-email-sms-delivery-chann",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-webhook-outbound-api-for-external-listeners",
+      "component": "NoWebhookOutboundApiForExternalListenersPage",
+      "label": "No webhook outbound API for external listeners",
+      "endpoint": "/api/gap-no-webhook-outbound-api-for-external-listeners",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-e-commerce-storefront-for-retail-orders",
+      "component": "NoECommerceStorefrontForRetailOrdersPage",
+      "label": "No e-commerce storefront for retail orders",
+      "endpoint": "/api/gap-no-e-commerce-storefront-for-retail-orders",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-multi-location-inventory-transfer-workflow-tabl",
+      "component": "NoMultiLocationInventoryTransferWorkflowTablPage",
+      "label": "No multi-location inventory transfer workflow (tables exist, no UI flow)",
+      "endpoint": "/api/gap-no-multi-location-inventory-transfer-workflow-tabl",
+      "kind": "gap"
+    }
+  ]
+}
