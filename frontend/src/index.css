@@ -872,3 +872,45 @@ tbody tr:hover {
   font-family: 'Inter', sans-serif;
   margin-bottom: 8px;
 }
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 20px;
+}
+
+.insight-panel {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.insight-panel h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--primary);
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.insight-panel .form-row,
+.insight-panel > .form-group,
+.insight-panel > .btn {
+  margin: 20px;
+}
+
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 240px));
+  gap: 16px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.filter-bar .form-group {
+  margin-bottom: 0;
+}
