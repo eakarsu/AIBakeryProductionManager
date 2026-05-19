@@ -16,6 +16,7 @@ import {
 import {
   ProductionAnalyticsPage, InventoryAlertsPage, BatchAlertsPage, ProductionSheetPage
 } from './pages/OperationalFeatures';
+import CustomViewsPage from './pages/CustomViewsPage';
 
 // Component imports
 import CrudPage from './components/CrudPage';
@@ -51,6 +52,8 @@ const NAV_ITEMS = [
   { key: 'equipment', label: 'Equipment', icon: '🔧', path: '/equipment' },
   { key: 'delivery', label: 'Delivery Routes', icon: '🚚', path: '/delivery' },
   { key: 'reports', label: 'Daily Reports', icon: '📈', path: '/reports' },
+  { section: 'Bakery Views' },
+  { key: 'custom-views', label: 'Bakery Custom Views', icon: '🧁', path: '/custom-views' },
   { section: 'AI Tools' },
   { key: 'ai-scaling', label: 'Recipe Scaling AI', icon: '⚖️', path: '/ai/scaling', ai: true },
   { key: 'ai-forecast', label: 'Demand Forecast AI', icon: '📉', path: '/ai/forecast', ai: true },
@@ -511,6 +514,7 @@ export default function App() {
         <Route path="/ai/bottleneck" element={<ProtectedRoute><AIBottleneckDetector /></ProtectedRoute>} />
         <Route path="/ai/quality" element={<ProtectedRoute><AIBatchQuality /></ProtectedRoute>} />
         <Route path="/ai/history" element={<ProtectedRoute><AIHistoryPage /></ProtectedRoute>} />
+        <Route path="/custom-views" element={<ProtectedRoute><CustomViewsPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

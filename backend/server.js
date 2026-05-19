@@ -561,6 +561,10 @@ app.use('/api/multi-location-demand', require('./routes/multiLocationDemandSync'
 app.use('/api/video-recipe-adapt', require('./routes/videoRecipeAdapt')); // apply pass 6 — audit custom suggestion
 
 app.use('/api/food-integrations', require('./routes/foodPosSupplierIntegrations')); // apply pass 6 — audit custom suggestion
+
+// ===== CUSTOM VIEWS (4 synthesized endpoints) =====
+app.use('/api/custom-views', require('./routes/customViews'));
+
 app.listen(PORT, () => {
   console.log(`Bakery Backend running on port ${PORT}`);
 });
