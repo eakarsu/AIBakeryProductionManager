@@ -414,4 +414,33 @@ router.get('/history/:id', authenticateToken, async (req, res) => {
   }
 });
 
+router.post('/fresh-goods-markdown', authenticateToken, async (req, res) => {
+  try {
+    const items = Array.isArray(req.body?.items) ? req.body.items : [];
+    const closingHours = Number(req.body?.closing_hours || 8);
+    const plan = items.map((item) => {
+      const qty = Number(item.quantity || 0);
+      const hours = Number(item.hours_to_stale || closingHours);
+      const price = Number(item.unit_price || 0);
+      const urgency = Math.max(0, Math.min(1, (closingHours - hours + 4) / Math.max(closingHours, 1)));
+      const discount = Math.round((15 + urgency * 35) / 5) * 5;
+      return {
+        name: item.name || 'item',
+        quantity: qty,
+        discount_pct: discount,
+        channel: urgency > 0.7 ? 'flash shelf + staff app' : urgency > 0.35 ? 'afternoon bundle' : 'standard display',
+        action: urgency > 0.7 ? 'Move to visible markdown zone now.' : urgency > 0.35 ? 'Bundle with coffee or lunch item.' : 'Hold full price until late day.',
+        recovered_revenue: Number((qty * price * (1 - discount / 100)).toFixed(2)),
+      };
+    });
+    res.json({
+      plan,
+      recovered_revenue: Number(plan.reduce((sum, item) => sum + item.recovered_revenue, 0).toFixed(2)),
+      generated_at: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

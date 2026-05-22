@@ -23,6 +23,12 @@ import CrudPage from './components/CrudPage';
 import StatusBadge from './components/StatusBadge';
 import Toast from './components/Toast';
 
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
+import TimelineView from './pages/TimelineView';
+import FreshGoodsMarkdown from './pages/FreshGoodsMarkdown';
+
 // ===== SIDEBAR =====
 const NAV_ITEMS = [
   { section: 'Overview' },
@@ -52,6 +58,7 @@ const NAV_ITEMS = [
   { key: 'equipment', label: 'Equipment', icon: '🔧', path: '/equipment' },
   { key: 'delivery', label: 'Delivery Routes', icon: '🚚', path: '/delivery' },
   { key: 'reports', label: 'Daily Reports', icon: '📈', path: '/reports' },
+  { key: 'fresh-markdown', label: 'Fresh Markdown', icon: '🏷️', path: '/fresh-markdown' },
   { section: 'Bakery Views' },
   { key: 'custom-views', label: 'Bakery Custom Views', icon: '🧁', path: '/custom-views' },
   { section: 'AI Tools' },
@@ -479,6 +486,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
+        <Route path="/codex/custom-viz" element={<ProtectedRoute><CodexCustomVizFeature /></ProtectedRoute>} />
+        <Route path="/codex/operations" element={<ProtectedRoute><CodexOperationsFeature /></ProtectedRoute>} />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><ProductionAnalyticsPage /></ProtectedRoute>} />
@@ -501,6 +512,7 @@ export default function App() {
         <Route path="/equipment" element={<ProtectedRoute><EquipmentPage /></ProtectedRoute>} />
         <Route path="/delivery" element={<ProtectedRoute><DeliveryPage /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+        <Route path="/fresh-markdown" element={<ProtectedRoute><FreshGoodsMarkdown /></ProtectedRoute>} />
         <Route path="/ai/scaling" element={<ProtectedRoute><AIRecipeScaling /></ProtectedRoute>} />
         <Route path="/ai/forecast" element={<ProtectedRoute><AIDemandForecast /></ProtectedRoute>} />
         <Route path="/ai/marketing" element={<ProtectedRoute><AIMarketingCopy /></ProtectedRoute>} />
