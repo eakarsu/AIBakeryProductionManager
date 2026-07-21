@@ -38,14 +38,14 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Dat
 app.use('/api/auth', authRoutes);
 
 // ===== AI ROUTES (auth handled inside each route) =====
-app.use('/api/ai', aiRoutes);
-app.use('/api/ai', require('./routes/aiNew'));
+// Model-generated production actions are quarantined from execution.
 
 // ===== BATCH ALERTS (auth handled inside) =====
 app.use('/api/batch-alerts', require('./routes/batchAlerts'));
 
 // ===== INTEGRATIONS / multi-location / supply-chain agent (apply pass 5) =====
 app.use('/api/integrations', require('./routes/integrations'));
+app.use('/api/governed-production', require('./routes/governedProduction'));
 
 // ===== PAGINATED LIST ENDPOINTS =====
 // Registered BEFORE crud routers so they take precedence for GET /
@@ -571,12 +571,4 @@ app.listen(PORT, () => {
 
 
 // === Batch 01 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-vision-based-quality-grading-from-oven-cameras', require('./routes/gap_no_vision_based_quality_grading_from_oven_cameras'));
-app.use('/api/gap-no-ai-dynamic-pricing-for-daily-fresh-goods', require('./routes/gap_no_ai_dynamic_pricing_for_daily_fresh_goods'));
-app.use('/api/gap-no-agentic-supplier-substitution-decisioning-surfa', require('./routes/gap_no_agentic_supplier_substitution_decisioning_surfa'));
-app.use('/api/gap-no-predictive-shelf-life-modeling-per-sku', require('./routes/gap_no_predictive_shelf_life_modeling_per_sku'));
-app.use('/api/gap-no-customer-subscription-standing-order-management', require('./routes/gap_no_customer_subscription_standing_order_management'));
-app.use('/api/gap-no-notification-system-no-email-sms-delivery-chann', require('./routes/gap_no_notification_system_no_email_sms_delivery_chann'));
-app.use('/api/gap-no-webhook-outbound-api-for-external-listeners', require('./routes/gap_no_webhook_outbound_api_for_external_listeners'));
-app.use('/api/gap-no-e-commerce-storefront-for-retail-orders', require('./routes/gap_no_e_commerce_storefront_for_retail_orders'));
-app.use('/api/gap-no-multi-location-inventory-transfer-workflow-tabl', require('./routes/gap_no_multi_location_inventory_transfer_workflow_tabl'));
+// Generated gap endpoints remain unmounted audit artifacts.

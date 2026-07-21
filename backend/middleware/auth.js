@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config({ path: '../.env' });
 
 function authenticateToken(req, res, next) {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) return res.status(503).json({ error: 'Authentication is not configured' });
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access denied' });

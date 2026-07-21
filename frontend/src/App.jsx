@@ -139,11 +139,6 @@ function LoginPage() {
     }
   };
 
-  const autofill = () => {
-    setEmail('admin@sweetrise.com');
-    setPassword('password123');
-  };
-
   return (
     <div className="login-page">
       <div className="login-card">
@@ -163,9 +158,6 @@ function LoginPage() {
           {error && <div className="error-msg">{error}</div>}
           <button type="submit" className="btn btn-primary btn-full">Login</button>
         </form>
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <button className="btn btn-outline btn-sm" onClick={autofill}>Use Demo Account</button>
-        </div>
       </div>
     </div>
   );
