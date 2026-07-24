@@ -36,6 +36,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Dat
 
 // ===== AUTH ROUTES (public) =====
 app.use('/api/auth', authRoutes);
+app.use('/api/runtime-ai', require('./routes/runtimeAi'));
 
 // ===== AI ROUTES (auth handled inside each route) =====
 // Model-generated production actions are quarantined from execution.
