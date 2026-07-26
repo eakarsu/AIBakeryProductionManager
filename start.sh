@@ -82,6 +82,9 @@ cd "$project_dir"
 [[ -f .env ]] || { echo 'Missing .env; copy .env.example and configure it.' >&2; exit 1; }
 [[ -d backend/node_modules && -d frontend/node_modules ]] || { echo 'Dependencies are missing; run scripts/bootstrap.sh explicitly.' >&2; exit 1; }
 set -a; source .env; set +a
+if [ "${NODE_ENV:-development}" != production ] && [ "${ENABLE_DEMO_CREDENTIAL_AUTOFILL:-true}" = true ]; then
+  BOOTSTRAP_ACKNOWLEDGEMENT=create-initial-admin node backend/create-admin.js
+fi
 
 : "${BACKEND_PORT:?BACKEND_PORT is required}"
 : "${FRONTEND_PORT:?FRONTEND_PORT is required}"
