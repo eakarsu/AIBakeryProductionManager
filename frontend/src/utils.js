@@ -1,4 +1,7 @@
-const API = '/api';
+const configuredApiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const API = configuredApiUrl
+  ? (configuredApiUrl.endsWith('/api') ? configuredApiUrl : `${configuredApiUrl}/api`)
+  : '/api';
 
 export function api(path, options = {}) {
   const token = localStorage.getItem('token');

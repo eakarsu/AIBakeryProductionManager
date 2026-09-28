@@ -165,7 +165,7 @@ function LoginPage() {
           >
             Auto Fill Demo Credentials
           </button>
-          <button type="submit" className="btn btn-primary btn-full">Login</button>
+          <button type="submit" className="btn btn-primary btn-full">Sign In</button>
         </form>
       </div>
     </div>
