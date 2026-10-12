@@ -24,6 +24,7 @@ const validateRequest = (req, res, next) => {
 
 // Helper: persist AI result to ai_results table
 async function persistAIResult(featureName, inputSummary, aiResult, userId) {
+  if (aiResult.unavailable) return;
   try {
     await pool.query(
       `INSERT INTO ai_results (feature_name, input_summary, content, parsed_result, model, tokens_used, user_id, created_at)

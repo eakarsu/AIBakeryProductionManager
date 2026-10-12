@@ -7,17 +7,16 @@ export default function ProductionGanttView() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
-  const today = new Date().toISOString().slice(0, 10);
-  const [start, setStart] = useState(today);
+  const [start, setStart] = useState('');
   const [days, setDays] = useState(7);
 
   const load = async () => {
     setLoading(true);
     setError('');
     try {
-      const res = await api(`/custom-views/oven-gantt?start=${start}&days=${days}`);
+      const res = await api(`/custom-views/oven-gantt?${start ? `start=${start}&` : ''}days=${days}`);
       if (res.error) setError(res.error);
-      else setData(res);
+      else { setData(res); if (!start) setStart(res.window.start); }
     } catch (e) {
       setError(e.message);
     } finally {

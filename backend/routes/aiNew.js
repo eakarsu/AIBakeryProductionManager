@@ -2,7 +2,7 @@ const express = require('express');
 const { callOpenRouter, parseAIJson } = require('../services/openrouter');
 const pool = require('../db');
 const router = express.Router();
-const { rateLimit } = require('express-rate-limit');
+const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const authenticateToken = require('../middleware/auth');
 
@@ -10,7 +10,7 @@ const authenticateToken = require('../middleware/auth');
 const aiRateLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 20,
-  keyGenerator: (req) => req.user?.id ? `user_${req.user.id}` : req.ip,
+  keyGenerator: (req) => req.user?.id ? `user_${req.user.id}` : ipKeyGenerator(req.ip),
   message: { error: 'Too many AI requests. Limit is 20 per hour. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -26,6 +26,7 @@ const BAKERY_SYSTEM_PROMPT = 'You are an expert bakery operations manager and fo
 
 // Helper: persist AI result to ai_results table
 async function persistAIResult(featureName, inputSummary, aiResult, userId) {
+  if (aiResult.unavailable) return;
   try {
     await pool.query(
       `INSERT INTO ai_results (feature_name, input_summary, content, parsed_result, model, tokens_used, user_id, created_at)
@@ -373,7 +374,11 @@ router.post('/batch-quality',
       }
 
       if (batches.length === 0) {
-        return res.status(404).json({ error: 'No batch data found for the specified period' });
+        return res.json({
+          batches_analyzed: 0,
+          date_range_days,
+          quality_analysis: { message: 'No batch records are available in this period. Choose a wider date range or add real batch data before requesting a quality analysis.' },
+        });
       }
 
       const completed = batches.filter(b => b.status === 'completed');

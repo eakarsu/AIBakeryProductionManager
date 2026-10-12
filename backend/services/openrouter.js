@@ -28,7 +28,15 @@ async function callOpenRouter(systemPrompt, userPrompt, { jsonMode = false } = {
   const apiKey = process.env.OPENROUTER_API_KEY;
   const model = process.env.OPENROUTER_MODEL || 'anthropic/claude-3-5-sonnet-20241022';
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  // An unavailable provider is a user-facing prerequisite, not a generated report.
+  const unavailable = () => {
+    const content = 'AI generation is temporarily unavailable. Your inputs were not analyzed or saved as an AI report. Please try again when the model provider is available.';
+    return { content, parsed: { message: content }, model: null, usage: {}, raw: { message: content }, unavailable: true };
+  };
+  if (!apiKey) return unavailable();
+
+  let response;
+  try { response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
@@ -45,14 +53,14 @@ async function callOpenRouter(systemPrompt, userPrompt, { jsonMode = false } = {
       temperature: jsonMode ? 0.2 : 0.7,
       max_tokens: 4000,
     }),
-  });
+  }); } catch (_) { return unavailable(); }
 
   if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`OpenRouter API error: ${response.status} - ${errText}`);
+    return unavailable();
   }
 
-  const data = await response.json();
+  let data;
+  try { data = await response.json(); } catch (_) { return unavailable(); }
   const content = data?.choices?.[0]?.message?.content || '';
   const parsed = jsonMode ? parseAIJson(content) : null;
 

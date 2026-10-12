@@ -6,6 +6,38 @@ const { body, validationResult } = require('express-validator');
 const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
+function demoCredentials() {
+  const pairs = [
+    ['DEMO_EMAIL', 'DEMO_PASSWORD'],
+    ['SEED_ADMIN_EMAIL', 'SEED_ADMIN_PASSWORD'],
+    ['SEED_USER_EMAIL', 'SEED_USER_PASSWORD'],
+    ['PROVISION_ADMIN_EMAIL', 'PROVISION_ADMIN_PASSWORD'],
+    ['BOOTSTRAP_ADMIN_EMAIL', 'BOOTSTRAP_ADMIN_PASSWORD'],
+    ['ADMIN_EMAIL', 'ADMIN_PASSWORD'],
+    ['DEFAULT_EMAIL', 'DEFAULT_PASSWORD'],
+  ];
+  const pair = pairs.find(([emailKey, passwordKey]) => process.env[emailKey] && process.env[passwordKey]);
+  return pair ? { email: process.env[pair[0]], password: process.env[pair[1]] } : null;
+}
+
+function sessionPayload(user) {
+  const token = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' },
+  );
+  return { token, user: { id: user.id, name: user.name, email: user.email, role: user.role } };
+}
+
+async function verifiedDemoUser() {
+  if (process.env.NODE_ENV === 'production') return null;
+  const credentials = demoCredentials();
+  if (!credentials) return null;
+  const result = await pool.query('SELECT * FROM users WHERE lower(email) = lower($1)', [credentials.email]);
+  const user = result.rows[0];
+  return user && await bcrypt.compare(credentials.password, user.password) ? user : null;
+}
+
 const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -30,17 +62,31 @@ router.post(
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) return res.status(400).json({ error: 'Invalid credentials' });
 
-      const token = jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: '24h' }
-      );
-      res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+      res.json(sessionPayload(user));
     } catch (err) {
       res.status(500).json({ error: 'Login failed' });
     }
   }
 );
+
+// Local one-click demo login. Credentials stay server-side and this is unavailable in production.
+router.get('/demo-status', async (_req, res) => {
+  try {
+    res.json({ enabled: Boolean(await verifiedDemoUser()) });
+  } catch (_error) {
+    res.json({ enabled: false });
+  }
+});
+
+router.post('/demo', async (_req, res) => {
+  try {
+    const user = await verifiedDemoUser();
+    if (!user) return res.status(503).json({ error: 'Demo login is not configured for this local environment.' });
+    return res.json(sessionPayload(user));
+  } catch (_error) {
+    return res.status(503).json({ error: 'Demo login is temporarily unavailable.' });
+  }
+});
 
 // Register — role is always 'staff' regardless of what caller sends
 router.post(

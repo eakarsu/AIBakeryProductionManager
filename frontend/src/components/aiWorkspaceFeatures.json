@@ -1,0 +1,93 @@
+[
+  {
+    "name": "IntegrationsWithPosSquareToastSupplierApisSPage",
+    "id": "cf-integrations-with-pos-square-toast-supplier-apis-s",
+    "title": "Integrations with POS (Square, Toast), supplier APIs (Sysco, US Foods), inventory (MarginEdge)",
+    "description": "Prepare a professional advisory report for integrations with pos (square, toast), supplier apis (sysco, us foods), inventory (marginedge) using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "MultiLocationDemandSyncWithRegionalTrendDetPage",
+    "id": "cf-multi-location-demand-sync-with-regional-trend-det",
+    "title": "Multi-location demand sync with regional trend detection",
+    "description": "Prepare a professional advisory report for multi-location demand sync with regional trend detection using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoAgenticSupplierSubstitutionDecisioningSurfaPage",
+    "id": "gap-no-agentic-supplier-substitution-decisioning-surfa",
+    "title": "No agentic supplier-substitution decisioning surfaced via UI",
+    "description": "Prepare a professional advisory report for no agentic supplier-substitution decisioning surfaced via ui using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoAiDynamicPricingForDailyFreshGoodsPage",
+    "id": "gap-no-ai-dynamic-pricing-for-daily-fresh-goods",
+    "title": "No AI dynamic pricing for daily fresh goods",
+    "description": "Prepare a professional advisory report for no ai dynamic pricing for daily fresh goods using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoCustomerSubscriptionStandingOrderManagementPage",
+    "id": "gap-no-customer-subscription-standing-order-management",
+    "title": "No customer subscription/standing-order management",
+    "description": "Prepare a professional advisory report for no customer subscription/standing-order management using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoECommerceStorefrontForRetailOrdersPage",
+    "id": "gap-no-e-commerce-storefront-for-retail-orders",
+    "title": "No e-commerce storefront for retail orders",
+    "description": "Prepare a professional advisory report for no e-commerce storefront for retail orders using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoMultiLocationInventoryTransferWorkflowTablPage",
+    "id": "gap-no-multi-location-inventory-transfer-workflow-tabl",
+    "title": "No multi-location inventory transfer workflow (tables exist, no UI flow)",
+    "description": "Prepare a professional advisory report for no multi-location inventory transfer workflow (tables exist, no ui flow) using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoNotificationSystemNoEmailSmsDeliveryChannPage",
+    "id": "gap-no-notification-system-no-email-sms-delivery-chann",
+    "title": "No notification system (no email/SMS delivery channel)",
+    "description": "Prepare a professional advisory report for no notification system (no email/sms delivery channel) using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoPredictiveShelfLifeModelingPerSkuPage",
+    "id": "gap-no-predictive-shelf-life-modeling-per-sku",
+    "title": "No predictive shelf-life modeling per SKU",
+    "description": "Prepare a professional advisory report for no predictive shelf-life modeling per sku using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoVisionBasedQualityGradingFromOvenCamerasPage",
+    "id": "gap-no-vision-based-quality-grading-from-oven-cameras",
+    "title": "No vision-based quality grading from oven cameras",
+    "description": "Prepare a professional advisory report for no vision-based quality grading from oven cameras using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "NoWebhookOutboundApiForExternalListenersPage",
+    "id": "gap-no-webhook-outbound-api-for-external-listeners",
+    "title": "No webhook outbound API for external listeners",
+    "description": "Prepare a professional advisory report for no webhook outbound api for external listeners using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "SupplyChainAgentPredictingIngredientShortagesPage",
+    "id": "cf-supply-chain-agent-predicting-ingredient-shortages",
+    "title": "Supply chain agent predicting ingredient shortages and auto-suggesting substitutions weeks in advance",
+    "description": "Prepare a professional advisory report for supply chain agent predicting ingredient shortages and auto-suggesting substitutions weeks in advance using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "VideoBasedRecipeAdaptationUploadFinishedProdPage",
+    "id": "cf-video-based-recipe-adaptation-upload-finished-prod",
+    "title": "Video-based recipe adaptation: upload finished product, AI generates scaled recipe + visual guide",
+    "description": "Prepare a professional advisory report for video-based recipe adaptation: upload finished product, ai generates scaled recipe + visual guide using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  }
+]

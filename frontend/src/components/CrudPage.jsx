@@ -4,6 +4,8 @@ import { api } from '../utils';
 import StatusBadge from './StatusBadge';
 import Toast from './Toast';
 
+const PAGE_SIZE = 15;
+
 export default function CrudPage({ title, icon, endpoint, columns, formFields, renderDetail, searchPlaceholder }) {
   const [items, setItems] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -11,36 +13,68 @@ export default function CrudPage({ title, icon, endpoint, columns, formFields, r
   const [editItem, setEditItem] = useState(null);
   const [formData, setFormData] = useState({});
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ page: 1, total: 0, totalPages: 1, limit: PAGE_SIZE });
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
-  const load = useCallback(() => {
-    api(`/${endpoint}${search ? `?search=${encodeURIComponent(search)}` : ''}`)
-      .then(result => setItems(result.data || result));
-  }, [endpoint, search]);
+  const load = useCallback(async (signal) => {
+    setLoading(true);
+    setLoadError('');
+    const query = new URLSearchParams({ page: String(page), limit: String(PAGE_SIZE) });
+    if (search) query.set('search', search);
+    try {
+      const result = await api(`/${endpoint}?${query}`, { signal });
+      const rows = Array.isArray(result) ? result : result.data;
+      if (!Array.isArray(rows)) throw new Error('The list returned an invalid response.');
+      setItems(rows.slice(0, PAGE_SIZE));
+      setPagination(result.pagination || { page, total: rows.length, totalPages: 1, limit: PAGE_SIZE });
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        setItems([]);
+        setLoadError(error.message || `Unable to load ${title.toLowerCase()}.`);
+      }
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
+  }, [endpoint, page, search, title]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const controller = new AbortController();
+    load(controller.signal);
+    return () => controller.abort();
+  }, [load]);
 
   const handleSave = async () => {
-    if (editItem) {
-      await api(`/${endpoint}/${editItem.id}`, { method: 'PUT', body: formData });
-      setToast({ msg: 'Updated successfully', type: 'success' });
-    } else {
-      await api(`/${endpoint}`, { method: 'POST', body: formData });
-      setToast({ msg: 'Created successfully', type: 'success' });
+    try {
+      if (editItem) {
+        await api(`/${endpoint}/${editItem.id}`, { method: 'PUT', body: formData });
+        setToast({ msg: 'Updated successfully', type: 'success' });
+      } else {
+        await api(`/${endpoint}`, { method: 'POST', body: formData });
+        setToast({ msg: 'Created successfully', type: 'success' });
+      }
+      setShowForm(false);
+      setEditItem(null);
+      setFormData({});
+      await load();
+    } catch (error) {
+      setToast({ msg: error.message || 'The item could not be saved.', type: 'error' });
     }
-    setShowForm(false);
-    setEditItem(null);
-    setFormData({});
-    load();
   };
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    await api(`/${endpoint}/${id}`, { method: 'DELETE' });
-    setSelected(null);
-    setToast({ msg: 'Deleted successfully', type: 'success' });
-    load();
+    try {
+      await api(`/${endpoint}/${id}`, { method: 'DELETE' });
+      setSelected(null);
+      setToast({ msg: 'Deleted successfully', type: 'success' });
+      await load();
+    } catch (error) {
+      setToast({ msg: error.message || 'The item could not be deleted.', type: 'error' });
+    }
   };
 
   const openEdit = (item) => {
@@ -72,9 +106,11 @@ export default function CrudPage({ title, icon, endpoint, columns, formFields, r
             className="search-input"
             placeholder={searchPlaceholder || `Search ${title.toLowerCase()}...`}
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{items.length} items</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+            {pagination.total} {pagination.total === 1 ? 'item' : 'items'}
+          </span>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table>
@@ -84,8 +120,18 @@ export default function CrudPage({ title, icon, endpoint, columns, formFields, r
               </tr>
             </thead>
             <tbody>
-              {items.length === 0 ? (
-                <tr><td colSpan={columns.length} style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>No items found</td></tr>
+              {loading ? (
+                <tr><td colSpan={columns.length} className="native-list-message">Loading {title.toLowerCase()}…</td></tr>
+              ) : loadError ? (
+                <tr><td colSpan={columns.length} className="native-list-message">
+                  <div className="native-load-error" role="alert">
+                    <strong>{title} could not be loaded.</strong>
+                    <p>{loadError}</p>
+                    <button type="button" className="btn btn-outline btn-sm" onClick={() => load()}>Retry</button>
+                  </div>
+                </td></tr>
+              ) : items.length === 0 ? (
+                <tr><td colSpan={columns.length} className="native-list-message">No items found</td></tr>
               ) : (
                 items.map(item => (
                   <tr key={item.id} onClick={() => setSelected(item)}>
@@ -100,6 +146,13 @@ export default function CrudPage({ title, icon, endpoint, columns, formFields, r
             </tbody>
           </table>
         </div>
+        {!loading && !loadError && pagination.totalPages > 1 && (
+          <nav className="native-pagination" aria-label={`${title} pages`}>
+            <button type="button" className="btn btn-outline btn-sm" disabled={page <= 1} onClick={() => setPage(current => Math.max(1, current - 1))}>Previous</button>
+            <span>Page {pagination.page} of {pagination.totalPages}</span>
+            <button type="button" className="btn btn-outline btn-sm" disabled={page >= pagination.totalPages} onClick={() => setPage(current => Math.min(pagination.totalPages, current + 1))}>Next</button>
+          </nav>
+        )}
       </div>
 
       {/* Detail Panel */}
@@ -121,6 +174,7 @@ export default function CrudPage({ title, icon, endpoint, columns, formFields, r
               ))
             )}
             <div className="detail-actions">
+              <button className="btn btn-outline" onClick={() => setSelected(null)}>Cancel</button>
               <button className="btn btn-primary" onClick={() => openEdit(selected)}>✏️ Edit</button>
               <button className="btn btn-danger" onClick={() => handleDelete(selected.id)}>🗑️ Delete</button>
             </div>

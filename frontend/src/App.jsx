@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import AIReportLibrary from "./components/AIReportLibrary";
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { api } from './utils';
 
@@ -114,7 +115,7 @@ function Sidebar() {
           <span className="icon">🚪</span> Logout ({user.name || 'User'})
         </button>
       </div>
-    </div>
+    <AIReportLibrary /></div>
   );
 }
 
@@ -123,20 +124,38 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [demoAvailable, setDemoAvailable] = useState(false);
+  const [checkingDemo, setCheckingDemo] = useState(true);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    let active = true;
+    api('/auth/demo-status')
+      .then((result) => { if (active) setDemoAvailable(result.enabled === true); })
+      .catch(() => { if (active) setDemoAvailable(false); })
+      .finally(() => { if (active) setCheckingDemo(false); });
+    return () => { active = false; };
+  }, []);
+
+  const login = async (path, credentials) => {
     setError('');
+    setLoading(true);
     try {
-      const res = await api('/auth/login', { method: 'POST', body: { email, password } });
-      if (res.error) { setError(res.error); return; }
+      const res = await api(path, { method: 'POST', ...(credentials ? { body: credentials } : {}) });
       localStorage.setItem('token', res.token);
       localStorage.setItem('user', JSON.stringify(res.user));
       navigate('/dashboard');
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(err.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    login('/auth/login', { email, password });
   };
 
   return (
@@ -158,14 +177,15 @@ function LoginPage() {
           {error && <div className="error-msg">{error}</div>}
           <button
             type="button"
-            onClick={() => { setEmail(import.meta.env.VITE_DEMO_EMAIL || ''); setPassword(import.meta.env.VITE_DEMO_PASSWORD || ''); }}
-            disabled={!import.meta.env.VITE_DEMO_EMAIL || !import.meta.env.VITE_DEMO_PASSWORD}
-            aria-label="Auto Fill Demo Credentials"
-            style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
+            onClick={() => login('/auth/demo')}
+            disabled={!demoAvailable || checkingDemo || loading}
+            aria-label="Log In as Demo"
+            title={demoAvailable ? 'Sign in with the configured local demo account' : 'A matching local demo account is required'}
+            style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: demoAvailable ? 'pointer' : 'not-allowed' }}
           >
-            Auto Fill Demo Credentials
+            {loading ? 'Signing in…' : checkingDemo ? 'Checking demo login…' : 'Log In as Demo'}
           </button>
-          <button type="submit" className="btn btn-primary btn-full">Sign In</button>
+          <button type="submit" className="btn btn-primary btn-full" disabled={loading}>{loading ? 'Signing in…' : 'Sign In'}</button>
         </form>
       </div>
     </div>

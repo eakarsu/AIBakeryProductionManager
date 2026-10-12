@@ -5,6 +5,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "create-admin": "node create-admin.js",
+    "ensure-demo-lists": "node scripts/ensure-list-minimums.js",
     "test": "node --test test/*.test.js"
   },
   "dependencies": {

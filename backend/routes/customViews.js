@@ -15,8 +15,13 @@ const authenticateToken = require('../middleware/auth');
 // Returns gantt rows grouped per oven, with start/end times and recipe context
 router.get('/oven-gantt', authenticateToken, async (req, res) => {
   try {
-    const start = req.query.start || new Date().toISOString().slice(0, 10);
     const days = Math.min(60, Math.max(1, parseInt(req.query.days) || 14));
+    let start = req.query.start;
+    if (!start) {
+      const latest = (await pool.query('SELECT MAX(scheduled_date)::date AS latest FROM oven_schedules')).rows[0].latest;
+      const end = latest && new Date(latest) < new Date() ? new Date(latest) : new Date();
+      start = new Date(end.getTime() - (days - 1) * 86400000).toISOString().slice(0, 10);
+    }
 
     const result = await pool.query(
       `SELECT os.id, os.oven_number, os.scheduled_date, os.start_time, os.end_time,
@@ -104,6 +109,9 @@ router.get('/oven-gantt', authenticateToken, async (req, res) => {
 router.get('/waste-heatmap', authenticateToken, async (req, res) => {
   try {
     const days = Math.min(180, Math.max(7, parseInt(req.query.days) || 30));
+    const latest = (await pool.query('SELECT MAX(waste_date)::date AS latest FROM waste_tracking')).rows[0].latest;
+    const today = new Date();
+    const end = latest && new Date(latest) < new Date(today.getTime() - (days - 1) * 86400000) ? new Date(latest) : today;
 
     const result = await pool.query(
       `SELECT item_name, category, reason,
@@ -112,18 +120,17 @@ router.get('/waste-heatmap', authenticateToken, async (req, res) => {
               SUM(COALESCE(quantity,0)) as qty,
               COUNT(*) as incidents
        FROM waste_tracking
-       WHERE waste_date >= CURRENT_DATE - ($1::int || ' days')::interval
+       WHERE waste_date >= $1::date - ($2::int || ' days')::interval
+         AND waste_date <= $1::date
        GROUP BY item_name, category, reason, TO_CHAR(waste_date, 'YYYY-MM-DD')
        ORDER BY item_name ASC, day ASC`,
-      [days]
+      [end.toISOString().slice(0, 10), days - 1]
     );
 
     // Build day axis (oldest -> newest)
     const dayAxis = [];
-    const today = new Date();
     for (let i = days - 1; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
+      const d = new Date(end.getTime() - i * 86400000);
       dayAxis.push(d.toISOString().slice(0, 10));
     }
 
@@ -322,8 +329,13 @@ router.get('/recipe/:id/pdf', authenticateToken, async (req, res) => {
 // Operates on batch_tracking joined with recipes.
 router.get('/production-editor', authenticateToken, async (req, res) => {
   try {
-    const start = req.query.start || new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
     const days = Math.min(60, Math.max(1, parseInt(req.query.days) || 14));
+    let start = req.query.start;
+    if (!start) {
+      const latest = (await pool.query('SELECT MAX(batch_date)::date AS latest FROM batch_tracking')).rows[0].latest;
+      const end = latest && new Date(latest) < new Date() ? new Date(latest) : new Date();
+      start = new Date(end.getTime() - (days - 1) * 86400000).toISOString().slice(0, 10);
+    }
 
     const batches = await pool.query(
       `SELECT bt.id, bt.recipe_id, bt.batch_number, bt.batch_date,

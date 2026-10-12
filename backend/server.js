@@ -40,6 +40,8 @@ app.use('/api/runtime-ai', require('./routes/runtimeAi'));
 
 // ===== AI ROUTES (auth handled inside each route) =====
 // Model-generated production actions are quarantined from execution.
+app.use('/api/ai', aiRoutes);
+app.use('/api/ai', require('./routes/aiNew'));
 
 // ===== BATCH ALERTS (auth handled inside) =====
 app.use('/api/batch-alerts', require('./routes/batchAlerts'));
@@ -566,6 +568,14 @@ app.use('/api/food-integrations', require('./routes/foodPosSupplierIntegrations'
 // ===== CUSTOM VIEWS (4 synthesized endpoints) =====
 app.use('/api/custom-views', require('./routes/customViews'));
 
+
+// Advisory AI reports only; native execution and approval routes stay unchanged.
+const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");
+const aiWorkspaceDatabase = require("./db.js");
+app.use('/api/report-workspace', require("./aiWorkspace.cjs").createAIWorkspaceRouter({
+  pool: aiWorkspaceDatabase, authenticateToken: require("./middleware/auth.js"),
+  aiRateLimiter: aiWorkspaceSupport.createWorkspaceLimiter(), features: require("./aiWorkspaceFeatures.json"),
+}));
 app.listen(PORT, () => {
   console.log(`Bakery Backend running on port ${PORT}`);
 });

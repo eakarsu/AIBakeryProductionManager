@@ -204,6 +204,24 @@ INSERT INTO suppliers (name, contact_person, email, phone, address, lead_time_da
 ('Paper & Print Co.', 'Jim Taylor', 'jim@paperprint.com', '555-2015', '1500 Label Ln, Austin, TX', 7, 'Net 45', 'Labels & Printing', 4, true),
 ('Restaurant Depot', 'Nancy Adams', 'nancy@restdepot.com', '555-2016', '1600 Wholesale Blvd, Denver, CO', 1, 'COD', 'General Supplies', 3, true);
 
+-- Supplier Orders (15 fictional planning records; not submitted or paid)
+INSERT INTO supplier_orders (supplier_id, order_date, expected_delivery, items, total_cost, status, received_date, notes) VALUES
+(1, CURRENT_DATE, CURRENT_DATE + 3, 'Bread flour and whole-grain flour', 485.00, 'ordered', NULL, 'Fictional demonstration purchase plan 1; not submitted to a supplier and not paid.'),
+(2, CURRENT_DATE, CURRENT_DATE + 1, 'Butter, cream, and cultured dairy', 372.50, 'ordered', NULL, 'Fictional demonstration purchase plan 2; not submitted to a supplier and not paid.'),
+(3, CURRENT_DATE, CURRENT_DATE + 1, 'Shell eggs for weekly production plan', 196.00, 'ordered', NULL, 'Fictional demonstration purchase plan 3; not submitted to a supplier and not paid.'),
+(4, CURRENT_DATE, CURRENT_DATE + 5, 'Cane sugar and confectioners sugar', 244.25, 'ordered', NULL, 'Fictional demonstration purchase plan 4; not submitted to a supplier and not paid.'),
+(5, CURRENT_DATE, CURRENT_DATE + 7, 'Dark chocolate and cocoa powder', 618.75, 'ordered', NULL, 'Fictional demonstration purchase plan 5; not submitted to a supplier and not paid.'),
+(6, CURRENT_DATE, CURRENT_DATE + 4, 'Cinnamon, vanilla, and cardamom', 185.50, 'ordered', NULL, 'Fictional demonstration purchase plan 6; not submitted to a supplier and not paid.'),
+(7, CURRENT_DATE, CURRENT_DATE + 3, 'Yeast, baking powder, and baking soda', 138.00, 'ordered', NULL, 'Fictional demonstration purchase plan 7; not submitted to a supplier and not paid.'),
+(8, CURRENT_DATE, CURRENT_DATE + 2, 'Seasonal berries for proposed menu', 426.00, 'ordered', NULL, 'Fictional demonstration purchase plan 8; not submitted to a supplier and not paid.'),
+(9, CURRENT_DATE, CURRENT_DATE + 3, 'Almonds, pecans, and sesame seeds', 295.75, 'ordered', NULL, 'Fictional demonstration purchase plan 9; not submitted to a supplier and not paid.'),
+(10, CURRENT_DATE, CURRENT_DATE + 5, 'Cake boxes, bread bags, and labels', 336.40, 'ordered', NULL, 'Fictional demonstration purchase plan 10; not submitted to a supplier and not paid.'),
+(11, CURRENT_DATE, CURRENT_DATE + 3, 'Food-safe sanitizer and cleaning supplies', 214.30, 'ordered', NULL, 'Fictional demonstration purchase plan 11; not submitted to a supplier and not paid.'),
+(12, CURRENT_DATE, CURRENT_DATE + 5, 'Organic bread and pastry flour', 542.00, 'ordered', NULL, 'Fictional demonstration purchase plan 12; not submitted to a supplier and not paid.'),
+(13, CURRENT_DATE, CURRENT_DATE + 2, 'Heavy cream and mascarpone', 286.80, 'ordered', NULL, 'Fictional demonstration purchase plan 13; not submitted to a supplier and not paid.'),
+(14, CURRENT_DATE, CURRENT_DATE + 4, 'Mango, passion fruit, and coconut', 378.25, 'ordered', NULL, 'Fictional demonstration purchase plan 14; not submitted to a supplier and not paid.'),
+(15, CURRENT_DATE, CURRENT_DATE + 7, 'Printed allergen labels and order forms', 169.90, 'ordered', NULL, 'Fictional demonstration purchase plan 15; not submitted to a supplier and not paid.');
+
 -- Waste Tracking (18 items)
 INSERT INTO waste_tracking (item_name, category, quantity, unit, reason, cost_impact, waste_date, recorded_by, notes) VALUES
 ('Sourdough Bread', 'Overproduction', 3, 'loaves', 'overproduction', 10.50, CURRENT_DATE - 1, 'Carlos M.', 'Slow Monday sales - donated to food bank'),

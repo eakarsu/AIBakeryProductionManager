@@ -5,9 +5,7 @@ import { api } from '../utils';
 // Lists, creates, updates, and deletes batch_tracking rows.
 export default function ProductionOrderWizardView() {
   const today = new Date().toISOString().slice(0, 10);
-  const [start, setStart] = useState(
-    new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10)
-  );
+  const [start, setStart] = useState('');
   const [days, setDays] = useState(21);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,9 +32,9 @@ export default function ProductionOrderWizardView() {
     setLoading(true);
     setError('');
     try {
-      const res = await api(`/custom-views/production-editor?start=${start}&days=${days}`);
+      const res = await api(`/custom-views/production-editor?${start ? `start=${start}&` : ''}days=${days}`);
       if (res.error) setError(res.error);
-      else setData(res);
+      else { setData(res); if (!start) setStart(res.window.start); }
     } catch (e) {
       setError(e.message);
     } finally {

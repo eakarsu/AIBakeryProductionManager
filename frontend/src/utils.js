@@ -3,9 +3,9 @@ const API = configuredApiUrl
   ? (configuredApiUrl.endsWith('/api') ? configuredApiUrl : `${configuredApiUrl}/api`)
   : '/api';
 
-export function api(path, options = {}) {
+export async function api(path, options = {}) {
   const token = localStorage.getItem('token');
-  return fetch(`${API}${path}`, {
+  const response = await fetch(`${API}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -13,5 +13,9 @@ export function api(path, options = {}) {
       ...options.headers,
     },
     body: options.body ? JSON.stringify(options.body) : undefined,
-  }).then(r => r.json());
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(data?.error || data?.message || `Request failed (${response.status})`);
+  if (data === null) throw new Error('The server returned an invalid response.');
+  return data;
 }
