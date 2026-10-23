@@ -28,6 +28,7 @@ import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
 import CodexOperationsFeature from './pages/CodexOperationsFeature';
 
 import TimelineView from './pages/TimelineView';
+import FeaturePack27A from './components/FeaturePack27A';
 import FreshGoodsMarkdown from './pages/FreshGoodsMarkdown';
 
 // ===== SIDEBAR =====
@@ -508,6 +509,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
+        <Route path="/feature-pack" element={<ProtectedRoute><FeaturePack27A /></ProtectedRoute>} />
         <Route path="/codex/custom-viz" element={<ProtectedRoute><CodexCustomVizFeature /></ProtectedRoute>} />
         <Route path="/codex/operations" element={<ProtectedRoute><CodexOperationsFeature /></ProtectedRoute>} />
 

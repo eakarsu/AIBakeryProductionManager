@@ -572,6 +572,7 @@ app.use('/api/custom-views', require('./routes/customViews'));
 // Advisory AI reports only; native execution and approval routes stay unchanged.
 const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");
 const aiWorkspaceDatabase = require("./db.js");
+app.use('/api/feature-pack', require('./routes/featurePack27a').createFeaturePackRouter({ authenticate: authenticateToken, loadRecords: async () => (await pool.query('SELECT * FROM recipes ORDER BY id DESC LIMIT 200')).rows }));
 app.use('/api/report-workspace', require("./aiWorkspace.cjs").createAIWorkspaceRouter({
   pool: aiWorkspaceDatabase, authenticateToken: require("./middleware/auth.js"),
   aiRateLimiter: aiWorkspaceSupport.createWorkspaceLimiter(), features: require("./aiWorkspaceFeatures.json"),
